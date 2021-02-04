@@ -30,4 +30,66 @@
 
 li{
     /* height: 15px !important; */
+    min-width: 610px !important;
+}
+
+.col {
+
+   padding: 4px 0px 4px 0px !important;
+
+}
+
+.border {
+   border-bottom:  solid;
+    border-color: rebeccapurple;
+
+}
+
+.team-Box-Icon {
+    /* border: 1px solid #ddd; */
+    /* border-radius: 4px; */
+    padding: 5px !important;
+    ;
+    width: 100% !important;
+    
+    height: 100% !important;
+    object-fit: contain !important;
+}
+
+.team-Box-Name {
+    font-weight: bolder;
+    font-size:4vh !important;
+    padding: 4px !important;
+    
+    object-fit:contain !important;
+    
+
+}
+
+.team-Box-WinLoss {
+     color:grey;
+     font-size:auto;
+     padding: 4px;
+     object-fit: cover;
+     
+    
+}
+
+.sport-header {
+     font-weight: bolder;
+}
+
+th {
+    text-align: right !important;
+        padding:4px 10px 4px 0px !important;
+    
+}
+td {
+    text-align: left;
+    padding: 4px 0px 4px 0px !important;
+}
+.row {
+    margin: 0px !important;
+
+
 }
