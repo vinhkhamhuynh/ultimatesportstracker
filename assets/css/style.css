@@ -3,7 +3,7 @@
 }
 
 .mega {
-    min-width: 800px !important;
+    min-width: 625px !important;
     /* top: 100% !important; */
     /* height: auto; */
     
@@ -36,7 +36,7 @@ body {
 
 li{
     /* height: 15px !important; */
-    min-width: 610px !important;
+    min-width: 150px !important;
 }
 
 .row {
@@ -166,5 +166,6 @@ td {
   white-space: nowrap;
   z-index: 1;
   will-change: width, height;
+  overflow-y:auto;
 }
 
