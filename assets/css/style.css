@@ -3,7 +3,7 @@
 }
 
 .mega {
-    min-width: 800px !important;
+    min-width: 625px !important;
     /* top: 100% !important; */
     /* height: auto; */
     
@@ -30,7 +30,7 @@
 
 li{
     /* height: 15px !important; */
-    min-width: 610px !important;
+    min-width: 150px !important;
 }
 
 .col {
@@ -123,5 +123,6 @@ td {
   white-space: nowrap;
   z-index: 1;
   will-change: width, height;
+  overflow-y:auto;
 }
 
