@@ -19,13 +19,13 @@ $(document).ready(function () {
         accordion: false
     });
 
-     //get api to display nfl team when user hover over "nfl" on nav bar
+     //vh get api to display nfl team when user hover over "nfl" on nav bar
      function nflDisplay() {
 
-        //create var from api link 
+        //vh create var from api link 
         var requestNflUrl = "https://api.sportsdata.io/v3/nfl/scores/json/AllTeams?key=c92709fa7d9a4261bf1ee17785767b5b";
       
-        //fetch data to use
+        //vh fetch data to use
         fetch(requestNflUrl)
         .then(function(response){
             return response.json();
@@ -34,28 +34,36 @@ $(document).ready(function () {
             console.log(nflData);
 
             
-            //loop data to generate all team info
-            for (var i =0 ; i< nflData.length; i++){
+            //vh loop data to generate all team info
+            for (var i = 0 ; i< nflData.length; i++) {
+                //vh03
+                // if (i === 0 || i === 25 || i === 36 ) break;
+                //vh create a div to hold team name btn and img with class to check img size in css 
+                // var nflDiv = $("<div>").attr("id", "nflDiv")
 
-                //create a div to hold team name btn and img
-                var nflDiv = $("<div>")
+                //vh03
+                var nflDiv = $("<li>").addClass("collection-item avatar").attr("id", "nflItem")
 
-                //generate img url from api
+
+                //vh generate img url from api
                 var imgUrl = nflData[i].WikipediaLogoUrl
 
-                //create img tag to hold url 
-                var teamImg= $("<img>").attr({"id": "teamImg", "src": imgUrl})
+                //vh create img tag to hold url 
+                var teamImg= $("<img>").attr({"id": "teamImg", "src": imgUrl}).addClass("circle")
 
-                //create team btn and attach name to button 
-                var teamBtn =$("<button>").attr("id", "teamBtn").text(nflData[i].Name)
+                //vh create team btn and attach name to button 
+                var teamSpan =$("<span>").attr("TeamID", nflData[i].TeamID).addClass("title").text(nflData[i].Name)
 
-                //attach img to nflDiv
+                //vh attach img to nflDiv
                 nflDiv.append(teamImg)
-                //attach btn to nflDiv
-                nflDiv.append(teamBtn)
+                //vh attach btn to nflDiv
+                nflDiv.append(teamSpan)
 
-                //attach  nflDiv to li-nfl
-                $("#NFL").append(nflDiv)
+                //vh attach nflDiv to li-nfl
+                // $("#NFL").append(nflDiv)
+
+                //vh03
+                $(".collection").append(nflDiv)
             }
         })
 
