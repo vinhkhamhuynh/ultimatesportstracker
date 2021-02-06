@@ -8,7 +8,7 @@
           gutter: 0, // Spacing from edge
           belowOrigin: false, // Displays dropdown below the button
         //   alignment: 'right', // Displays dropdown with edge aligned to the left of button
-        //   stopPropagation: false // Stops event propagation
+          stopPropagation: true // Stops event propagation
  });
 
 $(document).ready(function () {
@@ -71,6 +71,34 @@ $(document).ready(function () {
 
 nflDisplay();
 
+
+
+
+
+
+
+
+
+
+// saving teams selected
+var myTeam = JSON.parse(localStorage.getItem('storedNFL')) || [];
+
+
+var ul = document.getElementById('dropdown');
+ul.onclick = function(event) {
+    var teamId = event.target.getAttribute("teamid");
+    var teamFullName = event.target.innerHTML;
+    alert(teamFullName+" "+teamId);
+    if (myTeam.some(check => check.teamId === teamId)) {
+        //console.log("Object found inside the array.");
+        var removeIndex = myTeam.map(function (item) { return item.teamId; }).indexOf(teamId);
+        myTeam.splice(removeIndex, 1);
+    } else {
+        //console.log("Object not found.");
+        myTeam.push({ gameOf: "NFL", teamId: teamId, teamFullName: teamFullName });
+    }
+    localStorage.setItem('storedNFL', JSON.stringify(myTeam));
+;};
 
 
 // gary adding code for news feed
