@@ -34,7 +34,6 @@ $(document).ready(function () {
             .then(function (nflData) {
                 console.log(nflData);
 
-
                 //vh loop data to generate all team info group 1
                 for (var i = 1; i < 9; i++) {
                     //vh03
@@ -52,8 +51,8 @@ $(document).ready(function () {
                     //vh create img tag to hold url 
                     var teamImg = $("<img>").attr({ "id": "teamImg", "src": imgUrl }).addClass("circle")
 
-                    //vh create team btn and attach name to button 
-                    var teamSpan = $("<span>").attr("TeamID", nflData[i].TeamID).addClass("title").text(nflData[i].Name)
+                    //vh create team btn and attach name to button // gary change: added key as well
+                    var teamSpan = $("<span>").attr("TeamID", nflData[i].TeamID).addClass("title").text(nflData[i].Name).attr("keyId", nflData[i].Key) //var teamSpan = $("<span>").attr("TeamID", nflData[i].TeamID).addClass("title").text(nflData[i].Name)
 
                     //vh attach img to nflDiv
                     nflDiv.append(teamImg)
@@ -86,8 +85,8 @@ $(document).ready(function () {
                     //vh create img tag to hold url 
                     var teamImg = $("<img>").attr({ "id": "teamImg", "src": imgUrl }).addClass("circle")
 
-                    //vh create team btn and attach name to button 
-                    var teamSpan = $("<span>").attr("TeamID", nflData[i].TeamID).addClass("title").text(nflData[i].Name)
+                    //vh create team btn and attach name to button // gary change: added key as well
+                    var teamSpan = $("<span>").attr("TeamID", nflData[i].TeamID).addClass("title").text(nflData[i].Name).attr("keyId", nflData[i].Key) //var teamSpan = $("<span>").attr("TeamID", nflData[i].TeamID).addClass("title").text(nflData[i].Name)
 
                     //vh attach img to nflDiv
                     nflDiv.append(teamImg)
@@ -118,8 +117,9 @@ $(document).ready(function () {
                     //vh create img tag to hold url 
                     var teamImg = $("<img>").attr({ "id": "teamImg", "src": imgUrl }).addClass("circle")
 
-                    //vh create team btn and attach name to button 
-                    var teamSpan = $("<span>").attr("TeamID", nflData[i].TeamID).addClass("title").text(nflData[i].Name)
+                    //vh create team btn and attach name to button // gary change: added key as well
+                    var teamSpan = $("<span>").attr("TeamID", nflData[i].TeamID).addClass("title").text(nflData[i].Name).attr("keyId", nflData[i].Key) //var teamSpan = $("<span>").attr("TeamID", nflData[i].TeamID).addClass("title").text(nflData[i].Name)
+
 
                     //vh attach img to nflDiv
                     nflDiv.append(teamImg)
@@ -150,8 +150,8 @@ $(document).ready(function () {
                     //vh create img tag to hold url 
                     var teamImg = $("<img>").attr({ "id": "teamImg", "src": imgUrl }).addClass("circle")
 
-                    //vh create team btn and attach name to button 
-                    var teamSpan = $("<span>").attr("TeamID", nflData[i].TeamID).addClass("title").text(nflData[i].Name)
+                    //vh create team btn and attach name to button // gary change: added key as well
+                    var teamSpan = $("<span>").attr("TeamID", nflData[i].TeamID).addClass("title").text(nflData[i].Name).attr("keyId", nflData[i].Key) //var teamSpan = $("<span>").attr("TeamID", nflData[i].TeamID).addClass("title").text(nflData[i].Name)
 
                     //vh attach img to nflDiv
                     nflDiv.append(teamImg)
