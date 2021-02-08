@@ -202,7 +202,7 @@ $(document).ready(function () {
 
 
                     //vh create team btn and attach name to button 
-                    var teamSpan = $("<span>").attr("TeamID", nbaData[i].TeamID).addClass("title").text(nbaData[i].Name)
+                    var teamSpan = $("<span>").attr("TeamID", nbaData[i].TeamID).addClass("title").text(nbaData[i].Name).attr("keyId", nbaData[i].Key) // gary's change for team key
 
                     //vh attach img to nflDiv
                     nbaDiv.append(teamImg)
@@ -234,7 +234,7 @@ $(document).ready(function () {
 
 
                     //vh create team btn and attach name to button 
-                    var teamSpan = $("<span>").attr("TeamID", nbaData[i].TeamID).addClass("title").text(nbaData[i].Name)
+                    var teamSpan = $("<span>").attr("TeamID", nbaData[i].TeamID).addClass("title").text(nbaData[i].Name).attr("keyId", nbaData[i].Key) // gary's change for team key
 
                     //vh attach img to nflDiv
                     nbaDiv.append(teamImg)
@@ -266,7 +266,7 @@ $(document).ready(function () {
 
 
                     //vh create team btn and attach name to button 
-                    var teamSpan = $("<span>").attr("TeamID", nbaData[i].TeamID).addClass("title").text(nbaData[i].Name)
+                    var teamSpan = $("<span>").attr("TeamID", nbaData[i].TeamID).addClass("title").text(nbaData[i].Name).attr("keyId", nbaData[i].Key) // gary's change for team key
 
                     //vh attach img to nflDiv
                     nbaDiv.append(teamImg)
@@ -298,7 +298,7 @@ $(document).ready(function () {
 
 
                     //vh create team btn and attach name to button 
-                    var teamSpan = $("<span>").attr("TeamID", nbaData[i].TeamID).addClass("title").text(nbaData[i].Name)
+                    var teamSpan = $("<span>").attr("TeamID", nbaData[i].TeamID).addClass("title").text(nbaData[i].Name).attr("keyId", nbaData[i].Key) // gary's change for team key
 
                     //vh attach img to nflDiv
                     nbaDiv.append(teamImg)
