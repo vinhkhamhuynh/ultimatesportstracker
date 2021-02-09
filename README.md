@@ -35,9 +35,9 @@ ___
  
 **Links:**  
 
-Application link: (web link here)  
-GitHub link:  (github link here )
+Application link: (https://grider27.github.io/ultimatesportstracker/)  
+GitHub link:  (https://github.com/grider27/ultimatesportstracker)
 <p align="left">
-  <img src="img here " height="450" margin-bottom: 10px; title="ultimate sport tracker" alt="ultimate sport tracker">
+  <img src="./assets/img/final.png" margin-bottom: 10px; title="ultimate sport tracker" alt="ultimate sport tracker">
 ___
 

@@ -18,6 +18,7 @@ $(document).ready(function () {
     var teamOpp = "";
     var teamOppRank = "";
     var outputTeamCards = "";
+    var nflKey = "c92709fa7d9a4261bf1ee17785767b5b"; // garys over quota key is e36c9461165b4289b08a18497bd0b8b1
 
     init();
     function init() {
@@ -58,7 +59,7 @@ $(document).ready(function () {
     }
 
     function getNFLData() {
-        var requestUrlNfl = "https://api.sportsdata.io/v3/nfl/scores/json/AllTeams?key=e36c9461165b4289b08a18497bd0b8b1";
+        var requestUrlNfl = "https://api.sportsdata.io/v3/nfl/scores/json/AllTeams?key="+nflKey;
 
         fetch(requestUrlNfl)
             .then(function (response) {
@@ -68,7 +69,7 @@ $(document).ready(function () {
                 nflMain = nflData;
                 //console.log(nflMain);
                 // Mike's update
-                var requestUrlNflData = "https://api.sportsdata.io/v3/nfl/scores/json/TeamSeasonStats/2020REG?key=e36c9461165b4289b08a18497bd0b8b1";
+                var requestUrlNflData = "https://api.sportsdata.io/v3/nfl/scores/json/TeamSeasonStats/2020REG?key="+nflKey;
                 fetch(requestUrlNflData)
                     .then(function (response) {
                         return response.json();
@@ -97,7 +98,7 @@ $(document).ready(function () {
     }
 
     const getData = async (key) => {
-        const response = await fetch("https://api.sportsdata.io/v3/nfl/scores/json/NewsByTeam/" + key + "?key=e36c9461165b4289b08a18497bd0b8b1")
+        const response = await fetch("https://api.sportsdata.io/v3/nfl/scores/json/NewsByTeam/" + key + "?key="+nflKey)
         const data = await response.json()
         nflTeamNews = data
         //console.log(data)
