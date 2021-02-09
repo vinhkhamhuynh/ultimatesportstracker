@@ -1,10 +1,13 @@
 // gary's code
 $(document).ready(function () {
 
+
+
     // variables
     var cardsEl = document.getElementById('teamDetails');
     var myTeam = JSON.parse(localStorage.getItem('storedNFL')) || [];
     var nflMain = [];
+    var nflStatsMain = [];
     var nbaMain = [];
     var nflTeamNews = [];
     var teamLogo = "";
@@ -14,10 +17,17 @@ $(document).ready(function () {
     var teamCoach = "";
     var teamOpp = "";
     var teamOppRank = "";
+    var outputTeamCards = "";
 
-    getNews();
-    getNFLData();
-    getNBAData();
+    init();
+    function init() {
+        getNews();
+        getNFLData();
+        getNBAData();
+    }
+
+
+
 
     // saving teams selected
     var nflList = document.getElementsByClassName('collection');
@@ -38,7 +48,7 @@ $(document).ready(function () {
             }
             localStorage.setItem('storedNFL', JSON.stringify(myTeam));
             // nfl and nba split
-            if (gameOf === "NBA"){
+            if (gameOf === "NBA") {
                 getNBAData();
             } else {
                 getNFLData();
@@ -57,15 +67,27 @@ $(document).ready(function () {
             .then(function (nflData) {
                 nflMain = nflData;
                 //console.log(nflMain);
-                genMain();
+                // Mike's update
+                var requestUrlNflData = "https://api.sportsdata.io/v3/nfl/scores/json/TeamSeasonStats/2020REG?key=e36c9461165b4289b08a18497bd0b8b1";
+                fetch(requestUrlNflData)
+                    .then(function (response) {
+                        return response.json();
+                    })
+                    .then(function (nflStatsData) {
+                        nflStatsMain = nflStatsData;
+                        //console.log(nflStatsMain);
+                        genMain();
+                    })
             })
+
+
     }
 
 
     function genMain() {
         cardsEl.innerHTML = "";
         myTeam.forEach(function (team) {
-            if (team.gameOf === "NFL"){
+            if (team.gameOf === "NFL") {
                 getData(team.teamKey);
             } else {
                 //getDataNba(team.teamKey);
@@ -86,7 +108,6 @@ $(document).ready(function () {
         for (var i = 0; i < myTeam.length; i++) {
             for (var j = 0; j < nflMain.length; j++) {
                 if (myTeam[i].teamKey === nflMain[j].Key && myTeam[i].teamKey === key) {
-
                     teamLogo = nflMain[j].WikipediaLogoUrl;
                     teamConference = nflMain[j].Conference;
                     teamDiv = nflMain[j].Division;
@@ -94,39 +115,456 @@ $(document).ready(function () {
                     teamCoach = nflMain[j].HeadCoach;
                     teamOpp = nflMain[j].UpcomingOpponent;
                     teamOppRank = nflMain[j].UpcomingOpponentRank;
-                    //console.log(team);
-                    
-                    var outputTeamCards = `<div class="row border plate flex">
-                                            <div class="col s1 m1 l1">
-                                                <img src="${teamLogo}" class="team-Box-Icon">
-                                            </div>
+
+                    outputTeamCards = `<div class="row border plate flex">
+                                                <ul class="collapsible">
+                                                    <li class="collapsible-row">
+                                                        <div class="collapsible-header">
+                                                            <div class="col s1 m1 l1">
+                                                                <img src="${teamLogo}" class="team-Box-Icon">
+                                                            </div>
+                                                        
+                                                            <div class="col s8 m8 l8">
+                                                                <div class="row team-Box-Name">
+                                                                    <div class="col s12 m12 l12">${team}</div>
+                                                                </div>
+                                                                <div class="row team-Box-WinLoss">
+                                                                    <div class="col s12 m12 l12">Conference: ${teamConference} - ${teamDiv}</div>
+                                                                    <div class="col s12 m12 l12">Head Coach: ${teamCoach}</div>
+                                                                    <div class="col s12 m12 l12">Upcoming Opponent & Rank: ${teamOpp} - ${teamOppRank}</div>
+                                                                </div>
+                                                            </div>
                                             
-                                            <div class="col s8 m8 l8 border">
-                                                <div class="row team-Box-Name">
-                                                    <div class="col s12 m12 l12">${team}</div>
-                                                </div>
-                                                <div class="row team-Box-WinLoss">
-                                                    <div class="col s12 m12 l12">Conference: ${teamConference} - ${teamDiv}</div>
-                                                    <div class="col s12 m12 l12">Head Coach: ${teamCoach}</div>
-                                                    <div class="col s12 m12 l12">Upcoming Opponent & Rank: ${teamOpp} - ${teamOppRank}</div>
-                                                </div>
-                                            </div>
-                                
-                                            <div class="col m3">
-                                                <div class="row" id="newsFeed">
-                                                    <h4>Team News:</h4>
-                                                    <p>${nflTeamNews[0].Title}</p>
-                                                    <a target="_blank" href="${nflTeamNews[0].Url}">
-                                                    <i class="tiny material-icons">launch</i></a>
-                                                </div>
-                                            </div>
-                                    </div>
-                    `;
-                    $('#teamDetails').append(outputTeamCards);
+                                                            <div class="col m3">
+                                                                <div class="row" id="newsFeed">
+                                                                    <h4>Team News:</h4>
+                                                                    <p>${nflTeamNews[0].Title}</p>
+                                                                    <a target="_blank" href="${nflTeamNews[0].Url}">
+                                                                    <i class="tiny material-icons">launch</i></a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                    `;
+                    genCardDetails(key);
                 }
             }
         }
     }
+
+
+    function genCardDetails(key) {
+        for (var i = 0; i < myTeam.length; i++) {
+            for (var k = 0; k < nflStatsMain.length; k++) {
+                if (myTeam[i].teamKey === nflStatsMain[k].Team && myTeam[i].teamKey === key) {
+                    NFLSeason = nflStatsMain[k].Season;
+                    NFLGames = nflStatsMain[k].Games;
+                    NFLOverUnder = nflStatsMain[k].OverUnder;
+                    NFLTotalScore = nflStatsMain[k].TotalScore;
+                    NFLRedZoneConversions = nflStatsMain[k].RedZoneConversions;
+                    NFLPenaltyYards = nflStatsMain[k].PenaltyYards;
+                    NFLScoreOvertime = nflStatsMain[k].ScoreOvertime;
+                    NFLScoreQuarter1 = nflStatsMain[k].ScoreQuarter1;
+                    NFLScoreQuarter2 = nflStatsMain[k].ScoreQuarter2;
+                    NFLScoreQuarter3 = nflStatsMain[k].ScoreQuarter3;
+                    NFLScoreQuarter4 = nflStatsMain[k].ScoreQuarter4;
+                    NFLThirdDownConversions = nflStatsMain[k].ThirdDownConversions;
+                    NFLThirdDownPercentage = nflStatsMain[k].ThirdDownPercentage;
+                    NFLTimeOfPossession = nflStatsMain[k].TimeOfPossession;
+                    NFLFirstDowns = nflStatsMain[k].FirstDowns;
+                    NFLFirstDownsByPassing = nflStatsMain[k].FirstDownsByPassing;
+                    NFLFirstDownsByPenalty = nflStatsMain[k].FirstDownsByPenalty;
+                    NFLFirstDownsByRushing = nflStatsMain[k].FirstDownsByRushing;
+                    NFLFourthDownAttempts = nflStatsMain[k].FourthDownAttempts;
+                    NFLFourthDownConversions = nflStatsMain[k].FourthDownConversions;
+                    NFLFourthDownPercentage = nflStatsMain[k].FourthDownPercentage;
+                    NFLKickoffsInEndZone = nflStatsMain[k].KickoffsInEndZone;
+                    NFLPuntYards = nflStatsMain[k].PuntYards;
+                    NFLPunts = nflStatsMain[k].Punts;
+                    NFLTouchdowns = nflStatsMain[k].Touchdowns;
+                    NFLOffensivePlays = nflStatsMain[k].OffensivePlays;
+                    NFLOffensiveYards = nflStatsMain[k].OffensiveYards;
+                    NFLOffensiveYardsPerPlay = nflStatsMain[k].OffensiveYardsPerPlay;
+                    NFLPassingYards = nflStatsMain[k].PassingYards;
+                    NFLPasserRating = nflStatsMain[k].PasserRating;
+                    NFLPassingAttempts = nflStatsMain[k].PassingAttempts;
+                    NFLPassingCompletions = nflStatsMain[k].PassingCompletions;
+                    NFLPassingDropbacks = nflStatsMain[k].PassingDropbacks;
+                    NFLPassingInterceptions = nflStatsMain[k].PassingInterceptions;
+                    NFLPassingTouchdowns = nflStatsMain[k].PassingTouchdowns;
+                    NFLFieldGoalAttempts = nflStatsMain[k].FieldGoalAttempts;
+                    NFLFieldGoalsMade = nflStatsMain[k].FieldGoalsMade;
+                    NFLExtraPointKickingAttempts = nflStatsMain[k].ExtraPointKickingAttempts;
+                    NFLExtraPointKickingConversions = nflStatsMain[k].ExtraPointKickingConversions;
+                    NFLExtraPointPassingAttempts = nflStatsMain[k].ExtraPointPassingAttempts;
+                    NFLExtraPointPassingConversions = nflStatsMain[k].ExtraPointPassingConversions;
+                    NFLExtraPointRushingAttempts = nflStatsMain[k].ExtraPointRushingAttempts;
+                    NFLExtraPointRushingConversions = nflStatsMain[k].ExtraPointRushingConversions;
+                    NFLKickReturnYards = nflStatsMain[k].KickReturnYards;
+                    NFLKickoffs = nflStatsMain[k].Kickoffs;
+                    NFLKickoffsInEndZone = nflStatsMain[k].KickoffsInEndZone;
+                    NFLPuntYards = nflStatsMain[k].PuntYards;
+                    NFLPunts = nflStatsMain[k].Punts;
+                    NFLPenalties = nflStatsMain[k].Penalties;
+                    NFLPassingYardsPerAttempt = nflStatsMain[k].PassingYardsPerAttempt;
+                    NFLPassingYardsPerCompletion = nflStatsMain[k].PassingYardsPerCompletion;
+                    NFLPassesDefended = nflStatsMain[k].PassesDefended;
+                    NFLRedZoneAttempts = nflStatsMain[k].RedZoneAttempts;
+                    NFLRedZonePercentage = nflStatsMain[k].RedZonePercentage;
+                    NFLRushingTouchdowns = nflStatsMain[k].RushingTouchdowns;
+                    NFLRushingYards = nflStatsMain[k].RushingYards;
+                    NFLRushingYardsPerAttempt = nflStatsMain[k].RushingYardsPerAttempt;
+                    NFLQuarterbackHits = nflStatsMain[k].QuarterbackHits;
+                    NFLTimesSacked = nflStatsMain[k].TimesSacked;
+                    NFLBlockedKicks = nflStatsMain[k].BlockedKicks;
+                    NFLInterceptionReturnYards = nflStatsMain[k].InterceptionReturnYards;
+                    NFLInterceptionReturns = nflStatsMain[k].InterceptionReturns;
+                    NFLPuntReturnYards = nflStatsMain[k].PuntReturnYards;
+                    NFLSacks = nflStatsMain[k].Sacks;
+                    NFLSafeties = nflStatsMain[k].Safeties;
+                    NFLTwoPointConversionReturns = nflStatsMain[k].TwoPointConversionReturns;
+                    NFLFumbleReturnTouchdowns = nflStatsMain[k].FumbleReturnTouchdowns;
+                    NFLFumbleReturnYards = nflStatsMain[k].FumbleReturnYards;
+                    NFLFumbles = nflStatsMain[k].Fumbles;
+                    NFLFumblesForced = nflStatsMain[k].FumblesForced;
+                    NFLFumblesLost = nflStatsMain[k].FumblesLost;
+                    outputTeamCards += `                
+                    <div class="collapsible-body">
+                    <div class="row flex border">
+                        <div class="col s4 m4 l4 flex">
+                        <div class="container">
+                        
+                        <div class="row flex">
+                            <div class="col s12 m12 l12 border stat-header">
+                                Scoring
+                            </div>
+                        </div>   
+                        <div class="row flex">
+                            <div class="col s8 m8 l8 border">Season </div>
+                            <div class="col s4 m4 l4 border">${NFLSeason}</div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s8 m8 l8 border">Games </div>
+                            <div class="col s4 m4 l4 border">${NFLGames}</div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s8 m8 l8 border">OverUnder </div>
+                            <div class="col s4 m4 l4 border">${NFLOverUnder}</div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s8 m8 l8 border">TotalScore </div>
+                            <div class="col s4 m4 l4 border">${NFLTotalScore}</div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s8 m8 l8 border">RedZoneConversions </div>
+                            <div class="col s4 m4 l4 border">${NFLRedZoneConversions}</div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s8 m8 l8 border">PenaltyYards </div>
+                            <div class="col s4 m4 l4 border">${NFLPenaltyYards}</div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s8 m8 l8 border">ScoreOvertime </div>
+                            <div class="col s4 m4 l4 border">${NFLScoreOvertime}</div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s8 m8 l8 border">ScoreQuarter1 </div>
+                            <div class="col s4 m4 l4 border">${NFLScoreQuarter1}</div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s8 m8 l8 border">ScoreQuarter2 </div>
+                            <div class="col s4 m4 l4 border">${NFLScoreQuarter2}</div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s8 m8 l8 border">ScoreQuarter3 </div>
+                            <div class="col s4 m4 l4 border">${NFLScoreQuarter3}</div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s8 m8 l8 border">ScoreQuarter4 </div>
+                            <div class="col s4 m4 l4 border">${NFLScoreQuarter4}</div>
+
+
+                        </div>  
+                    </div>
+                        
+                        <div class="col s8 m8 l8 border flex">
+                            <div class="container">
+
+                                <div class="row flex">
+                                    <div class="col s12 m12 l12 border stat-header">
+                                        Offense
+                                    </div>
+                                </div>
+                    <div class="row flex">
+                        <div class="col s4 m4 l4 border">Touchdowns</div>
+                        <div class="col s2 m2 l2 border">${NFLTouchdowns}</div>
+                            <div class="col s4 m4 l4 border">Penalties</div>
+                            <div class="col s2 m2 l2 border">${NFLPenalties} </div>
+                        </div>
+                        <div class="row flex">
+                    <div class="col s4 m4 l4 border">OffensivePlays</div>
+                    <div class="col s2 m2 l2 border">${NFLOffensivePlays}</div>
+                        <div class="col s4 m4 l4 border">PassingYardsPerAttempt</div>
+                        <div class="col s2 m2 l2 border">${NFLPassingYardsPerAttempt} </div>
+                    </div>
+                    <div class="row flex">
+                        <div class="col s4 m4 l4 border">OffensiveYards</div>
+                        <div class="col s2 m2 l2 border">${NFLOffensiveYards}</div>
+                            <div class="col s4 m4 l4 border">PassingYardsPerCompletion</div>
+                            <div class="col s2 m2 l2 border">${NFLPassingYardsPerCompletion} </div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s4 m4 l4 border">OffensiveYardsPerPlay</div>
+                            <div class="col s2 m2 l2 border">${NFLOffensiveYardsPerPlay}</div>
+                        <div class="col s4 m4 l4 border">PassesDefended</div>
+                        <div class="col s2 m2 l2 border">${NFLPassesDefended} </div>
+                    </div>
+                    <div class="row flex">
+                        <div class="col s4 m4 l4 border">PassingYards</div>
+                        <div class="col s2 m2 l2 border">${NFLPassingYards}</div>
+                            <div class="col s4 m4 l4 border">RedZoneAttempts</div>
+                            <div class="col s2 m2 l2 border">${NFLRedZoneAttempts} </div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s4 m4 l4 border">PasserRating</div>
+                            <div class="col s2 m2 l2 border">${NFLPasserRating}</div>
+                            <div class="col s4 m4 l4 border">RedZonePercentage</div>
+                            <div class="col s2 m2 l2 border">${NFLRedZonePercentage} </div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s4 m4 l4 border">PassingAttempts</div>
+                            <div class="col s2 m2 l2 border">${NFLPassingAttempts}</div>
+                            <div class="col s4 m4 l4 border">RushingTouchdowns</div>
+                            <div class="col s2 m2 l2 border">${NFLRushingTouchdowns}</div>
+                    </div>
+                    <div class="row flex">
+                        <div class="col s4 m4 l4 border">PassingCompletions</div>
+                        <div class="col s2 m2 l2 border">${NFLPassingCompletions}</div>
+                            <div class="col s4 m4 l4 border">RushingYards</div>
+                            <div class="col s2 m2 l2 border">${NFLRushingYards}</div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s4 m4 l4 border">PassingDropbacks</div>
+                            <div class="col s2 m2 l2 border">${NFLPassingDropbacks}</div>
+                            <div class="col s4 m4 l4 border">RushingYardsPerAttempt</div>
+                            <div class="col s2 m2 l2 border">${NFLRushingYardsPerAttempt} </div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s4 m4 l4 border">PassingInterceptions</div>
+                            <div class="col s2 m2 l2 border">${NFLPassingInterceptions}</div>
+                            <div class="col s4 m4 l4 border">QuarterbackHits</div>
+                            <div class="col s2 m2 l2 border">${NFLQuarterbackHits} </div>
+                        </div>
+                            <div class="row flex">
+                            <div class="col s4 m4 l4 border">PassingTouchdowns</div>
+                            <div class="col s2 m2 l2 border">${NFLPassingTouchdowns}</div>
+                            <div class="col s4 m4 l4 border">TimesSacked</div>
+                            <div class="col s2 m2 l2 border">${NFLTimesSacked} </div>
+                        </div>
+
+                    </div>
+
+                        </div>
+
+                        
+
+                </div> <!-- End of first stat row-->
+
+                <div class="row flex border">
+                    <div class="col s4 m4 l4 flex">
+                        <div class="container">
+
+                        <div class="row flex">
+                            <div class="col s12 m12 l12 border stat-header">
+                                Downs </div>
+                            
+                        </div>
+                        <div class="row flex">
+                            <div class="col s4 m4 l4 border">ThirdDownConversions</div>
+                            <div class="col s2 m2 l2 border">${NFLThirdDownConversions}</div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s4 m4 l4 border">ThirdDownPercentage</div>
+                            <div class="col s2 m2 l2 border">${NFLThirdDownPercentage}</div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s4 m4 l4 border">TimeOfPossession</div>
+                            <div class="col s2 m2 l2 border">${NFLTimeOfPossession}</div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s4 m4 l4 border">FirstDowns</div>
+                            <div class="col s2 m2 l2 border">${NFLFirstDowns}</div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s4 m4 l4 border">FirstDownsByPassing</div>
+                            <div class="col s2 m2 l2 border">${NFLFirstDownsByPassing}</div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s4 m4 l4 border">FirstDownsByPenalty</div>
+                            <div class="col s2 m2 l2 border">${NFLFirstDownsByPenalty}</div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s4 m4 l4 border">FirstDownsByRushing</div>
+                            <div class="col s2 m2 l2 border">${NFLFirstDownsByRushing}</div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s4 m4 l4 border">FourthDownAttempts</div>
+                            <div class="col s2 m2 l2 border">${NFLFourthDownAttempts}</div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s4 m4 l4 border">FourthDownConversions</div>
+                            <div class="col s2 m2 l2 border">${NFLFourthDownConversions}</div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s4 m4 l4 border">FourthDownPercentage</div>
+                            <div class="col s2 m2 l2 border">${NFLFourthDownPercentage}</div>
+                        </div>
+                    
+
+                        </div>
+                    </div>
+
+                    <div class="col s4 m4 l4 flex">
+                        <div class="container">
+
+                        <div class="row flex">
+                            <div class="col s12 m12 l12 stat-header border">Special Teams </div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s4 m4 l4 border">FieldGoalAttempts</div>
+                            <div class="col s2 m2 l2 border">${NFLFieldGoalAttempts}</div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s4 m4 l4 border">FieldGoalsMade</div>
+                            <div class="col s2 m2 l2 border">${NFLFieldGoalsMade}</div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s4 m4 l4 border">ExtraPointKickingAttempts</div>
+                            <div class="col s2 m2 l2 border">${NFLExtraPointKickingAttempts}</div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s4 m4 l4 border">ExtraPointKickingConversions</div>
+                            <div class="col s2 m2 l2 border">${NFLExtraPointKickingConversions}</div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s4 m4 l4 border">ExtraPointPassingAttempts</div>
+                            <div class="col s2 m2 l2 border">${NFLExtraPointPassingAttempts}</div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s4 m4 l4 border">ExtraPointPassingConversions</div>
+                            <div class="col s2 m2 l2 border">${NFLExtraPointPassingConversions}</div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s4 m4 l4 border">ExtraPointRushingAttempts</div>
+                            <div class="col s2 m2 l2 border">${NFLExtraPointRushingAttempts}</div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s4 m4 l4 border">ExtraPointRushingConversions</div>
+                            <div class="col s2 m2 l2 border">${NFLExtraPointRushingConversions}</div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s4 m4 l4 border">KickReturnYards</div>
+                            <div class="col s2 m2 l2 border">${NFLKickReturnYards}</div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s4 m4 l4 border">Kickoffs</div>
+                            <div class="col s2 m2 l2 border">${NFLKickoffs}</div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s4 m4 l4 border">KickoffsInEndZone</div>
+                            <div class="col s2 m2 l2 border">${NFLKickoffsInEndZone}</div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s4 m4 l4 border">PuntYards</div>
+                            <div class="col s2 m2 l2 border">${NFLPuntYards}</div>
+                        </div>
+                        <div class="row flex">
+                            <div class="col s4 m4 l4 border">Punts</div>
+                            <div class="col s2 m2 l2 border">${NFLPunts}</div>
+                        </div>
+
+                        </div>
+                    </div>
+                    <div class="col s4 m4 l4 flex">
+                        <div class="container">
+                            <div class="row flex">
+                                <div class="col s12 m12 l12 border stat-header">Defense </div>
+                                
+                            </div>
+                            <div class="row flex">
+                                <div class="col s8 m8 l8 border">BlockedKicks </div>
+                                <div class="col s4 m4 l4 border"> ${NFLBlockedKicks}</div>
+                            </div>
+                            <div class="row flex">
+                                <div class="col s8 m8 l8 border">InterceptionReturnYards </div>
+                                <div class="col s4 m4 l4 border"> ${NFLInterceptionReturnYards}</div>
+                            </div>
+                            <div class="row flex">
+                                <div class="col s8 m8 l8 border">InterceptionReturns </div>
+                                <div class="col s4 m4 l4 border">${NFLInterceptionReturns}</div>
+                            </div>
+                            <div class="row flex">
+                                <div class="col s8 m8 l8 border">PuntReturnYards </div>
+                                <div class="col s4 m4 l4 border"> ${NFLPuntReturnYards}</div>
+                            </div>
+                            <div class="row flex">
+                                <div class="col s8 m8 l8 border">Sacks </div>
+                                <div class="col s4 m4 l4 border"> ${NFLSacks}</div>
+                            </div>
+                            <div class="row flex">
+                                <div class="col s8 m8 l8 border">Safeties </div>
+                                <div class="col s4 m4 l4 border"> ${NFLSafeties}</div>
+                            </div>
+                            <div class="row flex">
+                                <div class="col s8 m8 l8 border">TwoPointConversionReturns </div>
+                                <div class="col s4 m4 l4 border">${NFLTwoPointConversionReturns}</div>
+                            </div>
+                            <div class="row flex">
+                                <div class="col s8 m8 l8 border">FumbleReturnTouchdowns </div>
+                                <div class="col s4 m4 l4 border">${NFLFumbleReturnTouchdowns}</div>
+                            </div>
+                            <div class="row flex">
+                                <div class="col s8 m8 l8 border">FumbleReturnYards </div>
+                                <div class="col s4 m4 l4 border"> ${NFLFumbleReturnYards}</div>
+                            </div>
+                            <div class="row flex">
+                                <div class="col s8 m8 l8 border">Fumbles </div>
+                                <div class="col s4 m4 l4 border"> ${NFLFumbles}</div>
+                            </div>
+                            <div class="row flex">
+                                <div class="col s8 m8 l8 border">FumblesForced </div>
+                                <div class="col s4 m4 l4 border"> ${NFLFumblesForced}</div>
+                            </div>
+                            <div class="row flex">
+                                <div class="col s8 m8 l8 border">FumblesLost </div>
+                                <div class="col s4 m4 l4 border"> ${NFLFumblesLost}</div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    </div>
+
+
+
+            </div> <!-- End of first stat row-->
+    </div>  <!-- end of collapsible body-->
+                        </li>
+                    </ul>
+                </div>
+                `;
+                    $('#teamDetails').append(outputTeamCards);
+                }
+
+            }
+        }
+        $('.collapsible').collapsible();
+        document.addEventListener('DOMContentLoaded', function () {
+            var elems = document.querySelectorAll('.collapsible');
+            var instances = M.Collapsible.init(elems, options);
+        });
+    }
+
 
     //NY times API ran only once for headline news
     function getNews() {
@@ -193,13 +631,13 @@ $(document).ready(function () {
                     teamOpp = "NA" //nbaMain[j].UpcomingOpponent;
                     teamOppRank = "NA" //nbaMain[j].UpcomingOpponentRank;
                     //console.log(team);
-                    
+
                     var outputTeamCards = `<div class="row border plate flex">
                                             <div class="col s1 m1 l1">
                                                 <img src="${teamLogo}" class="team-Box-Icon">
                                             </div>
                                             
-                                            <div class="col s8 m8 l8 border">
+                                            <div class="col s8 m8 l8">
                                                 <div class="row team-Box-Name">
                                                     <div class="col s12 m12 l12">${team}</div>
                                                 </div>
