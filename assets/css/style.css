@@ -47,6 +47,10 @@ body {
  margin: 0px 0px 0px 0px !important;
 }
 
+.lower .l4 {
+    text-align: right;
+}
+
 .flex {
     display: flex;
     flex-wrap: wrap;
