@@ -16,9 +16,9 @@ $(document).ready(function () {
 
 
 
-    $('.collapsible').collapsible({
-        accordion: false
-    });
+    // $('.collapsible').collapsible({
+    //     accordion: false
+    // });
 
     //vh get api to display NFL team when user hover over "NFL" on nav bar
     function nflDisplay() {
