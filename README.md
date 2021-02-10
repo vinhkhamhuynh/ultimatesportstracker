@@ -3,7 +3,7 @@
 
 ## Objective
 
-Creating an interactive sport application where users can choose their favorite NFL and NBA teams and display them on the body of the page when click. Once the teams are picked, [sportsdata api] (https://sportsdata.io) is called and used to  display their teams stats as well as current news related to picked teams.
+Creating an interactive sport application where users can choose their favorite NFL and NBA teams and display them on the body of the page when click. Once the teams are picked, [sportsdata api] (https://sportsdata.io) is called and used to  display their teams stats as well as current news related to picked teams. For the second API NY Times was used to get latest sports news. [NY Times api] (https://developer.nytimes.com/docs/articlesearch-product/1/overview)
 ___
 
 
