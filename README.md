@@ -1,4 +1,4 @@
-# Ultimate Sports Tracker
+# Ultimate Sports Tracker 
 
 
 ## Objective
@@ -35,8 +35,8 @@ ___
  
 **Links:**  
 
-Application link: (https://grider27.github.io/ultimatesportstracker/)  
-GitHub link:  (https://github.com/grider27/ultimatesportstracker)
+Application link: (https://vinhkhamhuynh.github.io/ultimatesportstracker/)  
+GitHub link:  (https://github.com/vinhkhamhuynh/ultimatesportstracker)
 <p align="left">
   <img src="./assets/img/final.png" margin-bottom: 10px; title="ultimate sport tracker" alt="ultimate sport tracker">
 ___
